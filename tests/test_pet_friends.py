@@ -104,8 +104,11 @@ def test_successful_delete_pet_in_all_pets():
     _, auth_key = pf.get_api_key(valid_email, valid_password)
     _, all_pets = pf.get_list_of_pets(auth_key)
     pet_id = all_pets['pets'][0]['id']
-    status, _ = pf.delete_pet(auth_key, pet_id)
-    _, all_pets = pf.get_list_of_pets(auth_key)
+    if len(all_pets['pets']) > 0:
+        status, _ = pf.delete_pet(auth_key, pet_id)
+        _, all_pets = pf.get_list_of_pets(auth_key)
+    else:
+        raise Exception('Cant find a pet')
 
     assert status == 200
     assert pet_id not in all_pets.values()
